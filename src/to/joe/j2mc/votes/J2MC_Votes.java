@@ -3,11 +3,13 @@ package to.joe.j2mc.votes;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map.Entry;
+import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import to.joe.j2mc.votes.command.CancelVoteCommand;
 import to.joe.j2mc.votes.command.NewVoteCommand;
 import to.joe.j2mc.votes.command.VoteCommand;
 import to.joe.j2mc.votes.event.VoteTallyEvent;
@@ -19,6 +21,7 @@ public class J2MC_Votes extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(this, this);
         getCommand("vote").setExecutor(new VoteCommand(this));
         getCommand("newvote").setExecutor(new NewVoteCommand(this));
+        getCommand("cancelvote").setExecutor(new CancelVoteCommand(this));
     }
     
     //The question that is currently being asked. Null if no vote is in progress
@@ -33,6 +36,8 @@ public class J2MC_Votes extends JavaPlugin implements Listener {
     public int highestVoteAllowed;
     
     public boolean publicVotes;
+    public boolean voteCancelable;
+    public int voteTallyTask;
     
     /**
      * Creates a new vote which will fire a {@link VoteTallyEvent} that has the winning object
@@ -41,7 +46,7 @@ public class J2MC_Votes extends JavaPlugin implements Listener {
      * @param time How long the vote should run for in seconds
      * @param publicVotes Whether or not to announce who voted for what
      */
-    public void newVote(String question, HashMap<String, ?> choices, int time, boolean publicVotes) {
+    public void newVote(String question, HashMap<String, ?> choices, int time, boolean publicVotes, boolean cancelable) {
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "A vote has been started!");
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "Question: " + question);
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "Choices are:");
@@ -66,7 +71,7 @@ public class J2MC_Votes extends JavaPlugin implements Listener {
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "Vote with /vote <#>");
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting ends in " + time + " seconds");
         
-        getServer().getScheduler().scheduleSyncDelayedTask(this, voteTallyer, time*20);
+        voteTallyTask = getServer().getScheduler().scheduleSyncDelayedTask(this, voteTallyer, time*20);
     }
     
     Runnable voteTallyer = new Runnable() {
@@ -107,6 +112,8 @@ public class J2MC_Votes extends JavaPlugin implements Listener {
     };
 
     public void onVoteTally(VoteTallyEvent event) {
-        getServer().getLogger().info(event.getObject().toString());
+        Logger l = getServer().getLogger();
+        l.info("Just received a vote");
+        l.info(event.getObject().toString());
     }
 }

@@ -8,9 +8,9 @@ import to.joe.j2mc.core.command.MasterCommand;
 import to.joe.j2mc.votes.J2MC_Votes;
 
 public class VoteCommand extends MasterCommand {
-    
+
     J2MC_Votes plugin;
-    
+
     public VoteCommand(J2MC_Votes votes) {
         super(votes);
         plugin = votes;
@@ -30,13 +30,19 @@ public class VoteCommand extends MasterCommand {
             int i = Integer.parseInt(args[0]);
             i--;
             if (!plugin.votes.containsKey(sender.getName())) {
-                sender.sendMessage(ChatColor.DARK_AQUA + "You chose option " + ++i + ", " + plugin.possibleVotes.get(--i));
-                if (plugin.publicVotes)
+                if (plugin.publicVotes) {
+                    sender.sendMessage(ChatColor.DARK_AQUA + "Vote recorded. Thank you.");
                     plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " chose option " + ++i + ", " + plugin.possibleVotes.get(--i));
+                } else {
+                    sender.sendMessage(ChatColor.DARK_AQUA + "You chose option " + ++i + ", " + plugin.possibleVotes.get(--i));
+                }
             } else {
-                sender.sendMessage(ChatColor.DARK_AQUA + "You changed your vote to option " + ++i + ", " + plugin.possibleVotes.get(--i));
-                if (plugin.publicVotes)
+                if (plugin.publicVotes) {
+                    sender.sendMessage(ChatColor.DARK_AQUA + "Vote changed");
                     plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " changed their vote to option " + ++i + ", " + plugin.possibleVotes.get(--i));
+                } else {
+                    sender.sendMessage(ChatColor.DARK_AQUA + "You changed your vote to option " + ++i + ", " + plugin.possibleVotes.get(--i));
+                }
             }
             plugin.votes.put(sender.getName(), i);
         } catch (NumberFormatException e) {

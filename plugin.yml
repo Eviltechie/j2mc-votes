@@ -13,8 +13,24 @@ commands:
   newvote:
     description: Create a new vote
     usage: /newvote <Question> <Option 1> <Option 2> ... [Option 3]
+    permission: j2mc.votes.admin.newvote
+    permission-message: You may not make votes
+  cancelvote:
+    description: Cancel a vote in progress (if possible)
+    usage: /cancelvote
+    permission: j2mc.votes.admin.cancel
+    permission-message: You may not cancel votes
+    aliases: ['cvote']
 permissions:
   j2mc.votes.vote:
     description: Vote on stuff
-  j2mc.votes.admin:
+  j2mc.votes.admin.newvote:
     description: Make votes
+  j2mc.votes.admin.cancel
+    description: Cancel votes
+  j2mc.votes.admin.admin:
+    description: All admin perms
+    children:
+      j2mc.votes.vote: true
+      j2mc.votes.admin.newvote: true
+      j2mc.votes.admin.cancel: true

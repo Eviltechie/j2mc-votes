@@ -23,7 +23,7 @@ public class NewVoteCommand extends MasterCommand {
         map.put("Cherry", 64);
         map.put("Apple", 128);
         map.put("Pumpkin", 256);
-        plugin.newVote("Which pie is best?", map, 20, false);
+        plugin.newVote("Which pie is best?", map, 20, false, false);
     }
 
 }
