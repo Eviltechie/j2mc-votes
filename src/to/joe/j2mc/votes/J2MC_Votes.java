@@ -1,8 +1,8 @@
 package to.joe.j2mc.votes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import org.bukkit.ChatColor;
 import org.bukkit.event.Listener;
@@ -87,11 +87,20 @@ public class J2MC_Votes extends JavaPlugin implements Listener {
                 results.put(possibleVotes.get(vote), i);
             }
             
-            String winner = Collections.max(results.keySet());
+            for (String s : results.keySet()) {
+                getServer().broadcastMessage(ChatColor.DARK_AQUA + s + " " + results.get(s));
+            }
             
-            getServer().getPluginManager().callEvent(new VoteTallyEvent(choices.get(winner)));
+            Entry<String, Integer> winner = null;
             
-            getServer().broadcastMessage(ChatColor.DARK_AQUA + "The winner is " + winner);
+            for (Entry<String, Integer> e : results.entrySet()) {
+                if (winner == null || e.getValue() > winner.getValue())
+                    winner = e;
+            }
+            
+            getServer().getPluginManager().callEvent(new VoteTallyEvent(choices.get(winner.getKey())));
+            
+            getServer().broadcastMessage(ChatColor.DARK_AQUA + "The winner is " + winner.getKey() + " with " + winner.getValue() + " votes");
             
             question = null;
         }
