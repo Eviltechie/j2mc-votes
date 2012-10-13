@@ -1,0 +1,20 @@
+name: Votes
+main: to.joe.j2mc.votes.J2MC_Votes
+version: 0.1
+website: http://joe.to
+author: Eviltechie
+description: Voting plugin
+commands:
+  vote:
+    description: Vote on stuff
+    usage: /vote
+    permission: j2mc.votes.vote
+    permission-message: You may not vote
+  newvote:
+    description: Create a new vote
+    usage: /newvote <Question> <Option 1> <Option 2> ... [Option 3]
+permissions:
+  j2mc.votes.vote:
+    description: Vote on stuff
+  j2mc.votes.admin:
+    description: Make votes
