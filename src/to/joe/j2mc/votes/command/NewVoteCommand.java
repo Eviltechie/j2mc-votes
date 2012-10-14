@@ -2,6 +2,7 @@ package to.joe.j2mc.votes.command;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -35,7 +36,7 @@ public class NewVoteCommand extends MasterCommand {
             while (i.hasNext()) {
                 String s = i.next();
                 if (s.matches("\".*?\"")) {
-                    combinedArgs.add(s.substring(1, s.length()-1));
+                    combinedArgs.add(s.substring(1, s.length() - 1));
                 } else if (s.contains("\"")) {
                     StringBuilder sb = new StringBuilder();
                     do {
@@ -43,7 +44,7 @@ public class NewVoteCommand extends MasterCommand {
                         s = i.next();
                     } while (!s.contains("\""));
                     sb.append(s);
-                    combinedArgs.add(sb.substring(1, sb.length()-1));
+                    combinedArgs.add(sb.substring(1, sb.length() - 1));
                 } else {
                     combinedArgs.add(s);
                 }
@@ -61,7 +62,7 @@ public class NewVoteCommand extends MasterCommand {
             return;
         }
         try {
-            plugin.newVote(question, combinedArgs, UUID.randomUUID(), 20, true, true);
+            plugin.newVote(question, new HashSet<String>(combinedArgs), UUID.randomUUID(), 20, true, true);
         } catch (VoteAlreadyInProgressException e) {
             sender.sendMessage(ChatColor.RED + "A vote is already in progress");
         }

@@ -9,9 +9,9 @@ import to.joe.j2mc.votes.J2MC_Votes;
 import to.joe.j2mc.votes.event.VoteTallyEvent;
 
 public class VoteTallyer implements Runnable {
-    
+
     J2MC_Votes plugin;
-    
+
     public VoteTallyer(J2MC_Votes votes) {
         plugin = votes;
     }
@@ -23,7 +23,7 @@ public class VoteTallyer implements Runnable {
         for (String s : plugin.possibleVotes) {
             results.put(s, 0);
         }
-        for (Integer vote: plugin.votes.values()) {
+        for (Integer vote : plugin.votes.values()) {
             Integer i = results.get(plugin.possibleVotes.get(vote)) + 1;
             results.put(plugin.possibleVotes.get(vote), i);
         }

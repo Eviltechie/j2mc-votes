@@ -8,14 +8,14 @@ import to.joe.j2mc.core.command.MasterCommand;
 import to.joe.j2mc.votes.J2MC_Votes;
 
 public class CancelVoteCommand extends MasterCommand {
-    
-J2MC_Votes plugin;
-    
+
+    J2MC_Votes plugin;
+
     public CancelVoteCommand(J2MC_Votes votes) {
         super(votes);
         plugin = votes;
     }
-    
+
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
         if (plugin.question == null) {

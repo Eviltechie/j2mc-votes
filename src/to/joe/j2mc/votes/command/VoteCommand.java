@@ -47,7 +47,7 @@ public class VoteCommand extends MasterCommand {
                 } else {
                     sender.sendMessage(ChatColor.DARK_AQUA + "You changed your vote to option " + ++i + ", " + plugin.possibleVotes.get(--i));
                 }
-            } 
+            }
             plugin.votes.put(sender.getName(), i);
         } catch (NumberFormatException e) {
             sender.sendMessage(ChatColor.RED + "That's not a number");
