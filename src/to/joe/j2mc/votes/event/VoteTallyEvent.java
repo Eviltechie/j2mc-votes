@@ -17,10 +17,18 @@ public class VoteTallyEvent extends Event {
         this.id = id;
     }
     
+    /**
+     * Returns the winning {@link Object} (or {@link String}) that was passed in newVote() 
+     * @return The winning {@link Object} (or {@link String}) that was passed in newVote()
+     */
     public Object getObject() {
         return o;
     }
     
+    /**
+     * Returns the {@link UUID} passed in newVote()
+     * @return The {@link UUID} passed in newVote()
+     */
     public UUID getUUID() {
         return id;
     }
