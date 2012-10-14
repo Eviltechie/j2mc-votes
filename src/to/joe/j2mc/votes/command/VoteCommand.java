@@ -29,6 +29,10 @@ public class VoteCommand extends MasterCommand {
         try {
             int i = Integer.parseInt(args[0]);
             i--;
+            if (i < 0 || i > plugin.highestVoteAllowed) {
+                sender.sendMessage(ChatColor.RED + "That is not a valid choice");
+                return;
+            }
             if (!plugin.votes.containsKey(sender.getName())) {
                 if (plugin.publicVotes) {
                     sender.sendMessage(ChatColor.DARK_AQUA + "Vote recorded. Thank you.");
@@ -43,7 +47,7 @@ public class VoteCommand extends MasterCommand {
                 } else {
                     sender.sendMessage(ChatColor.DARK_AQUA + "You changed your vote to option " + ++i + ", " + plugin.possibleVotes.get(--i));
                 }
-            }
+            } 
             plugin.votes.put(sender.getName(), i);
         } catch (NumberFormatException e) {
             sender.sendMessage(ChatColor.RED + "That's not a number");

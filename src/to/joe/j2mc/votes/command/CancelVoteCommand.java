@@ -27,6 +27,7 @@ J2MC_Votes plugin;
             return;
         }
         plugin.getServer().getScheduler().cancelTask(plugin.voteTallyTask);
+        plugin.question = null;
         plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The vote in progress has been canceled");
     }
 

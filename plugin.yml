@@ -26,7 +26,7 @@ permissions:
     description: Vote on stuff
   j2mc.votes.admin.newvote:
     description: Make votes
-  j2mc.votes.admin.cancel
+  j2mc.votes.admin.cancel:
     description: Cancel votes
   j2mc.votes.admin.admin:
     description: All admin perms
