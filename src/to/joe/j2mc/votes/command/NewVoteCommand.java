@@ -1,7 +1,6 @@
 package to.joe.j2mc.votes.command;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
