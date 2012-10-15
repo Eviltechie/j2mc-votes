@@ -19,26 +19,26 @@ public class VoteCommand extends MasterCommand {
 
     public VoteCommand(J2MC_Votes votes) {
         super(votes);
-        plugin = votes;
+        this.plugin = votes;
     }
 
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
         //TODO See if vote is running. If it is, skip over this, it it's not, see if they have perms and make a new vote
-        if (!plugin.hasPoll() && sender.hasPermission("j2mc.votes.newvote")) {
+        if (!this.plugin.hasPoll() && sender.hasPermission("j2mc.votes.newvote")) {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.RED + "I can't make a vote unless you tell me what about");
                 return;
             }
-            Iterator<String> i = Arrays.asList(args).iterator();
-            ArrayList<String> combinedArgs = new ArrayList<String>();
+            final Iterator<String> i = Arrays.asList(args).iterator();
+            final ArrayList<String> combinedArgs = new ArrayList<String>();
             try {
                 while (i.hasNext()) {
                     String s = i.next();
                     if (s.matches("\".*?\"")) {
                         combinedArgs.add(s.substring(1, s.length() - 1));
                     } else if (s.contains("\"")) {
-                        StringBuilder sb = new StringBuilder();
+                        final StringBuilder sb = new StringBuilder();
                         do {
                             sb.append(s).append(" ");
                             s = i.next();
@@ -49,11 +49,11 @@ public class VoteCommand extends MasterCommand {
                         combinedArgs.add(s);
                     }
                 }
-            } catch (NoSuchElementException e) {
+            } catch (final NoSuchElementException e) {
                 sender.sendMessage(ChatColor.RED + "Invalid input, check your quotes");
                 return;
             }
-            String question = combinedArgs.remove(0);
+            final String question = combinedArgs.remove(0);
             if (combinedArgs.size() == 0) {
                 combinedArgs.add("Yes");
                 combinedArgs.add("No");
@@ -61,30 +61,30 @@ public class VoteCommand extends MasterCommand {
                 sender.sendMessage(ChatColor.RED + "Can't have only one option");
                 return;
             }
-            Poll<String> poll = new Poll<String>(question, PollChoice.fromList(combinedArgs), new DefaultHandler(), 20, true, true);
+            final Poll<String> poll = new Poll<String>(question, PollChoice.fromList(combinedArgs), new DefaultHandler(), 20, true, true);
             try {
-                plugin.newPoll(poll);
+                this.plugin.newPoll(poll);
                 return;
-            } catch (VoteAlreadyInProgressException e) {
+            } catch (final VoteAlreadyInProgressException e) {
                 sender.sendMessage(ChatColor.RED + "A vote is already in progress");
             }
         }
         //TODO See if vote is running. If it is and we are trying to cancel it, then do so, otherwise continue
-        if (plugin.hasPoll() && sender.hasPermission("j2mc.votes.cancel") && (args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("cancel"))) {
-            if (!plugin.getPoll().isCancellable()) {
+        if (this.plugin.hasPoll() && sender.hasPermission("j2mc.votes.cancel") && (args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("cancel"))) {
+            if (!this.plugin.getPoll().isCancellable()) {
                 sender.sendMessage(ChatColor.RED + "This vote cannot be canceled");
                 return;
             }
-            plugin.reset();
-            plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The vote in progress has been canceled");
+            this.plugin.reset();
+            this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The vote in progress has been canceled");
             return;
         }
         //All this runs if we aren't canceling the vote or making a new one
-        if (!plugin.hasPoll()) {
+        if (!this.plugin.hasPoll()) {
             sender.sendMessage(ChatColor.RED + "There is no vote in progress");
             return;
         }
-        Poll<?> poll = plugin.getPoll();
+        final Poll<?> poll = this.plugin.getPoll();
         if (args.length != 1) {
             sender.sendMessage(ChatColor.RED + "I need a choice (and only one) to tally your vote");
             return;
@@ -95,12 +95,12 @@ public class VoteCommand extends MasterCommand {
                 sender.sendMessage(ChatColor.RED + "That is not a valid choice");
                 return;
             }
-            Poll.VoteEntered result = poll.vote(sender.getName(), vote);
-            String choice = poll.getChoices().get(vote - 1).getName();
+            final Poll.VoteEntered result = poll.vote(sender.getName(), vote);
+            final String choice = poll.getChoices().get(vote - 1).getName();
             if (result == Poll.VoteEntered.NEW) {
                 if (poll.isPublicDisplay()) {
                     sender.sendMessage(ChatColor.DARK_AQUA + "Vote recorded. Thank you.");
-                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " chose option " + vote + ", " + choice);
+                    this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " chose option " + vote + ", " + choice);
                 } else {
                     sender.sendMessage(ChatColor.DARK_AQUA + "You chose option " + vote + ", " + choice);
                 }
@@ -108,12 +108,12 @@ public class VoteCommand extends MasterCommand {
             if (result == Poll.VoteEntered.CHANGED) {
                 if (poll.isPublicDisplay()) {
                     sender.sendMessage(ChatColor.DARK_AQUA + "Vote changed");
-                    plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " changed their vote to option " + ++vote + ", " + choice);
+                    this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " changed their vote to option " + ++vote + ", " + choice);
                 } else {
                     sender.sendMessage(ChatColor.DARK_AQUA + "You changed your vote to option " + vote + ", " + choice);
                 }
             }
-        } catch (NumberFormatException e) {
+        } catch (final NumberFormatException e) {
             sender.sendMessage(ChatColor.RED + "That's not a number");
             return;
         }

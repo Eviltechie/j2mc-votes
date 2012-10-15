@@ -5,18 +5,24 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 public class Poll<T> {
+    public enum VoteEntered {
+        NEW,
+        CHANGED
+    }
+
     //The question that is currently being asked. Null if no vote is in progress
     private String question = null;
     //A list of choices. String representation and corresponding object
-    private List<PollChoice<T>> choices;
+    private final List<PollChoice<T>> choices;
     //Hash map of votes. String is name of player and integer is choice
     private LinkedHashMap<String, Integer> votes;
     //Result handler for this vote
-    private ResultHandler<T> handler;
-    private int time;
+    private final ResultHandler<T> handler;
 
-    private boolean publicVotes;
-    private boolean voteCancelable;
+    private final int time;
+    private final boolean publicVotes;
+
+    private final boolean voteCancelable;
 
     public Poll(String question, List<PollChoice<T>> choices, ResultHandler<T> handler, int time, boolean publicVotes, boolean cancelable) {
         this.question = question;
@@ -27,16 +33,20 @@ public class Poll<T> {
         this.voteCancelable = cancelable;
     }
 
+    public List<PollChoice<T>> getChoices() {
+        return new ArrayList<PollChoice<T>>(this.choices);
+    }
+
     public String getQuestion() {
         return this.question;
     }
 
-    public boolean isValidChoice(int choice) {
-        return choice > 0 && choice <= this.choices.size();
+    public int getTime() {
+        return this.time;
     }
 
-    public List<PollChoice<T>> getChoices() {
-        return new ArrayList<PollChoice<T>>(choices);
+    public void handleResult() {
+        this.handler.handleResult(this.choices);
     }
 
     public boolean isCancellable() {
@@ -47,36 +57,27 @@ public class Poll<T> {
         return this.publicVotes;
     }
 
-    public int getTime() {
-        return this.time;
+    public boolean isValidChoice(int choice) {
+        return (choice > 0) && (choice <= this.choices.size());
     }
 
-    public VoteEntered vote(String name, int id) {
-        return this.votes.put(name, id) == null ? VoteEntered.NEW : VoteEntered.CHANGED;
+    public boolean showResult() {
+        return this.handler.showResult();
     }
 
     public void tally() {
-        int[] tally = new int[this.choices.size()];
+        final int[] tally = new int[this.choices.size()];
         for (Integer i : this.votes.values()) {
             tally[i--]++;
         }
         int x = 0;
-        for (PollChoice<T> choice : this.choices) {
+        for (final PollChoice<T> choice : this.choices) {
             choice.setResult(tally[x]);
             x++;
         }
     }
 
-    public enum VoteEntered {
-        NEW,
-        CHANGED
-    }
-
-    public boolean showResult() {
-        return handler.showResult();
-    }
-
-    public void handleResult() {
-        this.handler.handleResult(this.choices);
+    public VoteEntered vote(String name, int id) {
+        return this.votes.put(name, id) == null ? VoteEntered.NEW : VoteEntered.CHANGED;
     }
 }

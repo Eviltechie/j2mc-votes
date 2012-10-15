@@ -13,28 +13,29 @@ public class VoteTallyer implements Runnable {
     J2MC_Votes plugin;
 
     public VoteTallyer(J2MC_Votes votes) {
-        plugin = votes;
+        this.plugin = votes;
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public void run() {
-        Poll<?> poll = plugin.getPoll();
+        final Poll<?> poll = this.plugin.getPoll();
         poll.tally();
         if (poll.showResult()) {
             //TODO: TIE HANDLING
-            List<?> choices = poll.getChoices();
-            plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting has finished");
+            final List<?> choices = poll.getChoices();
+            this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting has finished");
             PollChoice<?> winner = null;
-            for (PollChoice<?> choice : (List<PollChoice<?>>) choices) {
-                plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + choice.getName() + " " + choice.getResult());
-                if (winner == null || choice.getResult() > winner.getResult())
+            for (final PollChoice<?> choice : (List<PollChoice<?>>) choices) {
+                this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + choice.getName() + " " + choice.getResult());
+                if ((winner == null) || (choice.getResult() > winner.getResult())) {
                     winner = choice;
+                }
             }
-            plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The winner is " + winner.getName() + " with " + winner.getResult() + " votes");
+            this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The winner is " + winner.getName() + " with " + winner.getResult() + " votes");
         }
         poll.handleResult();
-        plugin.reset();
+        this.plugin.reset();
     }
 
 }
