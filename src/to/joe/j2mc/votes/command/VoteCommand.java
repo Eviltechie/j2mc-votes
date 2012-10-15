@@ -24,7 +24,7 @@ public class VoteCommand extends MasterCommand {
 
     @Override
     public void exec(CommandSender sender, String commandName, String[] args, Player player, boolean isPlayer) {
-        //TODO See if vote is running. If it is, skip over this, it it's not, see if they have perms and make a new vote
+        //Make vote
         if (!this.plugin.hasPoll() && sender.hasPermission("j2mc.votes.newvote")) {
             if (args.length == 0) {
                 sender.sendMessage(ChatColor.RED + "I can't make a vote unless you tell me what about");
@@ -69,7 +69,7 @@ public class VoteCommand extends MasterCommand {
                 sender.sendMessage(ChatColor.RED + "A vote is already in progress");
             }
         }
-        //TODO See if vote is running. If it is and we are trying to cancel it, then do so, otherwise continue
+        //Cancel vote
         if (this.plugin.hasPoll() && sender.hasPermission("j2mc.votes.cancel") && (args[0].equalsIgnoreCase("c") || args[0].equalsIgnoreCase("cancel"))) {
             if (!this.plugin.getPoll().isCancellable()) {
                 sender.sendMessage(ChatColor.RED + "This vote cannot be canceled");
@@ -79,7 +79,7 @@ public class VoteCommand extends MasterCommand {
             this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The vote in progress has been canceled");
             return;
         }
-        //All this runs if we aren't canceling the vote or making a new one
+        //Record Vote
         if (!this.plugin.hasPoll()) {
             sender.sendMessage(ChatColor.RED + "There is no vote in progress");
             return;
