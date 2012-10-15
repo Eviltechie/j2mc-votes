@@ -5,13 +5,13 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import to.joe.j2mc.core.command.MasterCommand;
+import to.joe.j2mc.votes.DefaultHandler;
 import to.joe.j2mc.votes.J2MC_Votes;
 import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
 
@@ -64,7 +64,7 @@ public class VoteCommand extends MasterCommand {
                 return;
             }
             try {
-                plugin.newVote(question, new HashSet<String>(combinedArgs), UUID.randomUUID(), 20, true, true);
+                plugin.newVote(question, new HashSet<String>(combinedArgs), new DefaultHandler(), 20, true, true);
                 return;
             } catch (VoteAlreadyInProgressException e) {
                 sender.sendMessage(ChatColor.RED + "A vote is already in progress");

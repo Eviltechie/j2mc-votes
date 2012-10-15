@@ -3,10 +3,9 @@ package to.joe.j2mc.votes.staticaccess;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 import to.joe.j2mc.votes.J2MC_Votes;
-import to.joe.j2mc.votes.event.VoteTallyEvent;
+import to.joe.j2mc.votes.ResultHandler;
 import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
 import to.joe.j2mc.votes.exception.VoteNotLoadedException;
 
@@ -42,8 +41,8 @@ public class Votes {
      * @throws VoteAlreadyInProgressException
      * @throws VoteNotLoadedException
      */
-    public void newVote(String question, Set<String> choices, UUID id, int time, boolean publicVotes, boolean cancelable) throws VoteAlreadyInProgressException, VoteNotLoadedException {
-        instance.newVote(question, choices, id, time, publicVotes, cancelable);
+    public void newVote(String question, Set<String> choices, ResultHandler handler, int time, boolean publicVotes, boolean cancelable) throws VoteAlreadyInProgressException, VoteNotLoadedException {
+        instance.newVote(question, choices, handler, time, publicVotes, cancelable);
     }
 
     /**
@@ -64,7 +63,7 @@ public class Votes {
      * @throws VoteAlreadyInProgressException
      * @throws VoteNotLoadedException
      */
-    public void newVote(String question, HashMap<String, ?> choices, UUID id, int time, boolean publicVotes, boolean cancelable) throws VoteAlreadyInProgressException, VoteNotLoadedException {
-        instance.newVote(question, choices, id, time, publicVotes, cancelable);
+    public void newVote(String question, HashMap<String, ?> choices, ResultHandler handler, int time, boolean publicVotes, boolean cancelable) throws VoteAlreadyInProgressException, VoteNotLoadedException {
+        instance.newVote(question, choices, handler, time, publicVotes, cancelable);
     }
 }
