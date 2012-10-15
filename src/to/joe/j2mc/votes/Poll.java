@@ -78,7 +78,7 @@ public class Poll<T> {
         this.tallied = true;
         final int[] tally = new int[this.choices.size()];
         for (Integer i : this.votes.values()) {
-            tally[i--]++;
+            tally[i-1]++;
         }
         int x = 0;
         for (final PollItem<T> choice : this.choices) {
