@@ -108,7 +108,7 @@ public class VoteCommand extends MasterCommand {
             if (result == Poll.VoteEntered.CHANGED) {
                 if (poll.isPublicDisplay()) {
                     sender.sendMessage(ChatColor.DARK_AQUA + "Vote changed");
-                    this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " changed their vote to option " + ++vote + ", " + choice);
+                    this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + sender.getName() + " changed their vote to option " + vote + ", " + choice);
                 } else {
                     sender.sendMessage(ChatColor.DARK_AQUA + "You changed your vote to option " + vote + ", " + choice);
                 }
