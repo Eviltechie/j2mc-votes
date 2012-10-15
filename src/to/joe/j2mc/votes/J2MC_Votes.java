@@ -43,7 +43,7 @@ public class J2MC_Votes extends JavaPlugin {
         this.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Choices are:");
 
         int num = 1;
-        for (final PollChoice<?> choice : poll.getChoices()) {
+        for (final PollItem<?> choice : poll.getChoices()) {
             this.getServer().broadcastMessage(ChatColor.DARK_AQUA.toString() + num + " " + choice.getName());
             num++;
         }

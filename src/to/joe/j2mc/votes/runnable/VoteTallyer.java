@@ -6,7 +6,7 @@ import org.bukkit.ChatColor;
 
 import to.joe.j2mc.votes.J2MC_Votes;
 import to.joe.j2mc.votes.Poll;
-import to.joe.j2mc.votes.PollChoice;
+import to.joe.j2mc.votes.PollItem;
 
 public class VoteTallyer implements Runnable {
 
@@ -25,8 +25,8 @@ public class VoteTallyer implements Runnable {
             //TODO: TIE HANDLING
             final List<?> choices = poll.getChoices();
             this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting has finished");
-            PollChoice<?> winner = null;
-            for (final PollChoice<?> choice : (List<PollChoice<?>>) choices) {
+            PollItem<?> winner = null;
+            for (final PollItem<?> choice : (List<PollItem<?>>) choices) {
                 this.plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + choice.getName() + " " + choice.getResult());
                 if ((winner == null) || (choice.getResult() > winner.getResult())) {
                     winner = choice;

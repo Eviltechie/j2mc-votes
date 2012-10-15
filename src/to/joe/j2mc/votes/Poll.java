@@ -13,7 +13,7 @@ public class Poll<T> {
     //The question that is currently being asked. Null if no vote is in progress
     private String question = null;
     //A list of choices. String representation and corresponding object
-    private final List<PollChoice<T>> choices;
+    private final List<PollItem<T>> choices;
     //Hash map of votes. String is name of player and integer is choice
     private LinkedHashMap<String, Integer> votes;
     //Result handler for this vote
@@ -23,8 +23,9 @@ public class Poll<T> {
     private final boolean publicVotes;
 
     private final boolean voteCancelable;
+    private boolean tallied;
 
-    public Poll(String question, List<PollChoice<T>> choices, ResultHandler<T> handler, int time, boolean publicVotes, boolean cancelable) {
+    public Poll(String question, List<PollItem<T>> choices, ResultHandler<T> handler, int time, boolean publicVotes, boolean cancelable) {
         this.question = question;
         this.choices = choices;
         this.handler = handler;
@@ -33,8 +34,8 @@ public class Poll<T> {
         this.voteCancelable = cancelable;
     }
 
-    public List<PollChoice<T>> getChoices() {
-        return new ArrayList<PollChoice<T>>(this.choices);
+    public List<PollItem<T>> getChoices() {
+        return new ArrayList<PollItem<T>>(this.choices);
     }
 
     public String getQuestion() {
@@ -57,6 +58,10 @@ public class Poll<T> {
         return this.publicVotes;
     }
 
+    public boolean isTallied() {
+        return this.tallied;
+    }
+
     public boolean isValidChoice(int choice) {
         return (choice > 0) && (choice <= this.choices.size());
     }
@@ -66,12 +71,16 @@ public class Poll<T> {
     }
 
     public void tally() {
+        if (this.tallied) {
+            throw new RuntimeException("Poll already tallied");
+        }
+        this.tallied = true;
         final int[] tally = new int[this.choices.size()];
         for (Integer i : this.votes.values()) {
             tally[i--]++;
         }
         int x = 0;
-        for (final PollChoice<T> choice : this.choices) {
+        for (final PollItem<T> choice : this.choices) {
             choice.setResult(tally[x]);
             x++;
         }

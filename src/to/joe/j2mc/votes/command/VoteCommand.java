@@ -10,7 +10,7 @@ import to.joe.j2mc.core.command.MasterCommand;
 import to.joe.j2mc.votes.DefaultHandler;
 import to.joe.j2mc.votes.J2MC_Votes;
 import to.joe.j2mc.votes.Poll;
-import to.joe.j2mc.votes.PollChoice;
+import to.joe.j2mc.votes.PollItem;
 import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
 
 public class VoteCommand extends MasterCommand {
@@ -61,7 +61,7 @@ public class VoteCommand extends MasterCommand {
                 sender.sendMessage(ChatColor.RED + "Can't have only one option");
                 return;
             }
-            final Poll<String> poll = new Poll<String>(question, PollChoice.fromList(combinedArgs), new DefaultHandler(), 20, true, true);
+            final Poll<String> poll = new Poll<String>(question, PollItem.fromList(combinedArgs), new DefaultHandler(), 20, true, true);
             try {
                 this.plugin.newPoll(poll);
                 return;

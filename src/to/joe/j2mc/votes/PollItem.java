@@ -3,21 +3,22 @@ package to.joe.j2mc.votes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PollChoice<T> {
-    public static List<PollChoice<String>> fromList(List<String> list) {
-        final List<PollChoice<String>> ret = new ArrayList<PollChoice<String>>();
+public class PollItem<T> {
+    public static List<PollItem<String>> fromList(List<String> list) {
+        final List<PollItem<String>> ret = new ArrayList<PollItem<String>>();
         for (final String s : list) {
-            ret.add(new PollChoice<String>(s, s));
+            ret.add(new PollItem<String>(s, s));
         }
         return ret;
     }
 
-    public String name;
-    public T value;
+    private final String name;
+    private final T value;
+    private boolean tallied;
 
     int result = 0;
 
-    public PollChoice(String name, T value) {
+    public PollItem(String name, T value) {
         this.name = name;
         this.value = value;
     }
@@ -34,7 +35,12 @@ public class PollChoice<T> {
         return this.value;
     }
 
+    public boolean isTallied() {
+        return this.tallied;
+    }
+
     public void setResult(int result) {
         this.result = result;
+        this.tallied = true;
     }
 }
