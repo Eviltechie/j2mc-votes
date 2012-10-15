@@ -38,6 +38,7 @@ public class J2MC_Votes extends JavaPlugin {
         if (this.poll != null) {
             throw new VoteAlreadyInProgressException();
         }
+        this.poll = poll;
         this.getServer().broadcastMessage(ChatColor.DARK_AQUA + "A vote has been started!");
         this.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Question: " + poll.getQuestion());
         this.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Choices are:");
