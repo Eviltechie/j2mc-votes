@@ -1,7 +1,7 @@
 package to.joe.j2mc.votes;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 
 public class Poll<T> {
@@ -15,7 +15,7 @@ public class Poll<T> {
     //A list of choices. String representation and corresponding object
     private final List<PollItem<T>> choices;
     //Hash map of votes. String is name of player and integer is choice
-    private LinkedHashMap<String, Integer> votes;
+    private HashMap<String, Integer> votes;
     //Result handler for this vote
     private final ResultHandler<T> handler;
 
@@ -32,6 +32,7 @@ public class Poll<T> {
         this.time = time;
         this.publicVotes = publicVotes;
         this.voteCancelable = cancelable;
+        this.votes = new HashMap<String, Integer>();
     }
 
     public List<PollItem<T>> getChoices() {
