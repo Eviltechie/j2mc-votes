@@ -1,9 +1,11 @@
 package to.joe.j2mc.votes;
 
-public class DefaultHandler implements ResultHandler {
+import java.util.List;
+
+public class DefaultHandler implements ResultHandler<String> {
 
     @Override
-    public void handleResult(Object winner) {
+    public void handleResult(List<PollChoice<String>> list) {
         // Do nothing, really. We've already handled it. Other plugins can do what they want here.
     }
 

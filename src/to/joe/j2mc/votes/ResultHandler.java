@@ -1,6 +1,9 @@
 package to.joe.j2mc.votes;
 
-public interface ResultHandler {
-    public void handleResult(Object winner);
+import java.util.List;
+
+public interface ResultHandler<T> {
+    public void handleResult(List<PollChoice<T>> list);
+
     public boolean showResult();
 }

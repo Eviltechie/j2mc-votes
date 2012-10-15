@@ -1,80 +1,78 @@
 package to.joe.j2mc.votes;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
-
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import to.joe.j2mc.votes.command.VoteCommand;
 import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
 import to.joe.j2mc.votes.runnable.VoteTallyer;
-import to.joe.j2mc.votes.staticaccess.Votes;
 
 public class J2MC_Votes extends JavaPlugin {
 
+    private static J2MC_Votes instance;
+    private static Thread mainThread;
+
     @Override
     public void onEnable() {
-        Votes.setInstance(this);
         getCommand("vote").setExecutor(new VoteCommand(this));
+        setInstance(this);
     }
 
-    //The question that is currently being asked. Null if no vote is in progress
-    public String question = null;
-    //A list of choices. String representation and corresponding object
-    public HashMap<String, ?> choices;
-    //An arraylist of the strings in choices
-    public ArrayList<String> possibleVotes;
-    //Hash map of votes. String is name of player and integer is choice
-    public HashMap<String, Integer> votes;
-    //Highest number allowed for a vote
-    public int highestVoteAllowed;
-    //Result handler for this vote
-    public ResultHandler handler;
+    @Override
+    public void onDisable() {
+        setInstance(null);
+    }
 
-    public boolean publicVotes;
-    public boolean voteCancelable;
-    public int voteTallyTask;
-
-    public void newVote(String question, Set<String> choices, ResultHandler handler, int time, boolean publicVotes, boolean cancelable) throws VoteAlreadyInProgressException {
-        HashMap<String, String> options = new HashMap<String, String>();
-        for (String s : choices) {
-            options.put(s, s);
+    public static void startNewPoll(Poll<?> poll) throws VoteAlreadyInProgressException {
+        if (instance == null) {
+            throw new RuntimeException("J2MC_Votes not enabled, somehow");
         }
-        newVote(question, options, handler, time, publicVotes, cancelable);
+        if (!Thread.currentThread().equals(mainThread)) {
+            throw new RuntimeException("Dipshit called votes from another thread.");
+        }
+        instance.newPoll(poll);
     }
 
-    public void newVote(String question, HashMap<String, ?> choices, ResultHandler handler, int time, boolean publicVotes, boolean cancelable) throws VoteAlreadyInProgressException {
-        if (this.question != null) {
+    private void setInstance(J2MC_Votes instance) {
+        J2MC_Votes.instance = instance;
+        J2MC_Votes.mainThread = Thread.currentThread();
+    }
+
+    private Poll<?> poll;
+
+    private int voteTallyTask;
+
+    public void newPoll(Poll<?> poll) throws VoteAlreadyInProgressException {
+        if (this.poll != null) {
             throw new VoteAlreadyInProgressException();
         }
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "A vote has been started!");
-        getServer().broadcastMessage(ChatColor.DARK_AQUA + "Question: " + question);
+        getServer().broadcastMessage(ChatColor.DARK_AQUA + "Question: " + poll.getQuestion());
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "Choices are:");
 
-        this.choices = choices;
-        this.question = question;
-        this.publicVotes = publicVotes;
-        this.handler = handler;
-        voteCancelable = cancelable;
-        votes = new HashMap<String, Integer>();
-
-        possibleVotes = new ArrayList<String>();
-
-        for (String s : choices.keySet()) {
-            possibleVotes.add(s);
-        }
-
-        highestVoteAllowed = possibleVotes.size() - 1;
-
-        for (int x = 0; x < possibleVotes.size(); x++) {
-            getServer().broadcastMessage(ChatColor.DARK_AQUA + "" + (x + 1) + " " + possibleVotes.get(x));
+        int num = 1;
+        for (PollChoice<?> choice : poll.getChoices()) {
+            getServer().broadcastMessage(ChatColor.DARK_AQUA.toString() + num + " " + choice.getName());
+            num++;
         }
 
         getServer().broadcastMessage(ChatColor.DARK_AQUA + "Vote with /vote <#>");
-        getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting ends in " + time + " seconds");
+        getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting ends in " + poll.getTime() + " seconds");
 
-        voteTallyTask = getServer().getScheduler().scheduleSyncDelayedTask(this, new VoteTallyer(this), time * 20);
+        voteTallyTask = getServer().getScheduler().scheduleSyncDelayedTask(this, new VoteTallyer(this), poll.getTime() * 20);
     }
+
+    public Poll<?> getPoll() {
+        return poll;
+    }
+
+    public void reset() {
+        this.getServer().getScheduler().cancelTask(this.voteTallyTask);
+        this.poll = null;
+    }
+
+    public boolean hasPoll() {
+        return this.poll != null;
+    }
+
 }

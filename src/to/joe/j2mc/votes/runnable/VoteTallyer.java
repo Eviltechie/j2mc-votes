@@ -1,11 +1,12 @@
 package to.joe.j2mc.votes.runnable;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
+import java.util.List;
 
 import org.bukkit.ChatColor;
 
 import to.joe.j2mc.votes.J2MC_Votes;
+import to.joe.j2mc.votes.Poll;
+import to.joe.j2mc.votes.PollChoice;
 
 public class VoteTallyer implements Runnable {
 
@@ -15,30 +16,25 @@ public class VoteTallyer implements Runnable {
         plugin = votes;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void run() {
-        HashMap<String, Integer> results = new HashMap<String, Integer>();
-        for (String s : plugin.possibleVotes) {
-            results.put(s, 0);
-        }
-        for (Integer vote : plugin.votes.values()) {
-            Integer i = results.get(plugin.possibleVotes.get(vote)) + 1;
-            results.put(plugin.possibleVotes.get(vote), i);
-        }
-        if (plugin.handler.showResult()) {
+        Poll<?> poll = plugin.getPoll();
+        poll.tally();
+        if (poll.showResult()) {
+            //TODO: TIE HANDLING
+            List<?> choices = poll.getChoices();
             plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Voting has finished");
-            for (String s : results.keySet()) {
-                plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + s + " " + results.get(s));
+            PollChoice<?> winner = null;
+            for (PollChoice<?> choice : (List<PollChoice<?>>) choices) {
+                plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + choice.getName() + " " + choice.getResult());
+                if (winner == null || choice.getResult() > winner.getResult())
+                    winner = choice;
             }
+            plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The winner is " + winner.getName() + " with " + winner.getResult() + " votes");
         }
-        Entry<String, Integer> winner = null;
-        for (Entry<String, Integer> e : results.entrySet()) {
-            if (winner == null || e.getValue() > winner.getValue())
-                winner = e;
-        }
-        plugin.handler.handleResult(plugin.choices.get(winner.getKey()));
-        plugin.getServer().broadcastMessage(ChatColor.DARK_AQUA + "The winner is " + winner.getKey() + " with " + winner.getValue() + " votes");
-        plugin.question = null;
+        poll.handleResult();
+        plugin.reset();
     }
 
 }
