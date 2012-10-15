@@ -8,8 +8,6 @@ import java.util.UUID;
 import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import to.joe.j2mc.votes.command.CancelVoteCommand;
-import to.joe.j2mc.votes.command.NewVoteCommand;
 import to.joe.j2mc.votes.command.VoteCommand;
 import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
 import to.joe.j2mc.votes.runnable.VoteTallyer;
@@ -21,8 +19,6 @@ public class J2MC_Votes extends JavaPlugin {
     public void onEnable() {
         Votes.setInstance(this);
         getCommand("vote").setExecutor(new VoteCommand(this));
-        getCommand("newvote").setExecutor(new NewVoteCommand(this));
-        getCommand("cancelvote").setExecutor(new CancelVoteCommand(this));
     }
 
     //The question that is currently being asked. Null if no vote is in progress
