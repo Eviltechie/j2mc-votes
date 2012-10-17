@@ -11,7 +11,7 @@ import to.joe.j2mc.votes.DefaultHandler;
 import to.joe.j2mc.votes.J2MC_Votes;
 import to.joe.j2mc.votes.Poll;
 import to.joe.j2mc.votes.PollItem;
-import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
+import to.joe.j2mc.votes.exception.VoteInProgressNotCancellableException;
 
 public class VoteCommand extends MasterCommand {
 
@@ -65,7 +65,7 @@ public class VoteCommand extends MasterCommand {
             try {
                 this.plugin.newPoll(poll);
                 return;
-            } catch (final VoteAlreadyInProgressException e) {
+            } catch (final VoteInProgressNotCancellableException e) {
                 sender.sendMessage(ChatColor.RED + "A vote is already in progress");
             }
         }
@@ -90,7 +90,7 @@ public class VoteCommand extends MasterCommand {
             return;
         }
         try {
-            int vote = Integer.parseInt(args[0]);
+            final int vote = Integer.parseInt(args[0]);
             if (!poll.isValidChoice(vote)) {
                 sender.sendMessage(ChatColor.RED + "That is not a valid choice");
                 return;

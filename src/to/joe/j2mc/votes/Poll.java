@@ -15,7 +15,7 @@ public class Poll<T> {
     //A list of choices. String representation and corresponding object
     private final List<PollItem<T>> choices;
     //Hash map of votes. String is name of player and integer is choice
-    private HashMap<String, Integer> votes;
+    private final HashMap<String, Integer> votes;
     //Result handler for this vote
     private final ResultHandler<T> handler;
 
@@ -77,8 +77,8 @@ public class Poll<T> {
         }
         this.tallied = true;
         final int[] tally = new int[this.choices.size()];
-        for (Integer i : this.votes.values()) {
-            tally[i-1]++;
+        for (final Integer i : this.votes.values()) {
+            tally[i - 1]++;
         }
         int x = 0;
         for (final PollItem<T> choice : this.choices) {
@@ -89,5 +89,9 @@ public class Poll<T> {
 
     public VoteEntered vote(String name, int id) {
         return this.votes.put(name, id) == null ? VoteEntered.NEW : VoteEntered.CHANGED;
+    }
+
+    void cancel() {
+        this.handler.cancelled();
     }
 }

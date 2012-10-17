@@ -4,7 +4,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import to.joe.j2mc.votes.command.VoteCommand;
-import to.joe.j2mc.votes.exception.VoteAlreadyInProgressException;
+import to.joe.j2mc.votes.exception.VoteInProgressNotCancellableException;
 import to.joe.j2mc.votes.runnable.VoteTallyer;
 
 public class J2MC_Votes extends JavaPlugin {
@@ -12,7 +12,7 @@ public class J2MC_Votes extends JavaPlugin {
     private static J2MC_Votes instance;
     private static Thread mainThread;
 
-    public static void startNewPoll(Poll<?> poll) throws VoteAlreadyInProgressException {
+    public static void startNewPoll(Poll<?> poll) throws VoteInProgressNotCancellableException {
         if (J2MC_Votes.instance == null) {
             throw new RuntimeException("J2MC_Votes not enabled, somehow");
         }
@@ -34,9 +34,14 @@ public class J2MC_Votes extends JavaPlugin {
         return this.poll != null;
     }
 
-    public void newPoll(Poll<?> poll) throws VoteAlreadyInProgressException {
+    public void newPoll(Poll<?> poll) throws VoteInProgressNotCancellableException {
         if (this.poll != null) {
-            throw new VoteAlreadyInProgressException();
+            if (!this.poll.isCancellable()) {
+                throw new VoteInProgressNotCancellableException();
+            } else {
+                this.poll.cancel();
+                this.getServer().broadcastMessage(ChatColor.DARK_AQUA + "Previous vote cancelled.");
+            }
         }
         this.poll = poll;
         this.getServer().broadcastMessage(ChatColor.DARK_AQUA + "A vote has been started!");
