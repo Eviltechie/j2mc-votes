@@ -35,6 +35,10 @@ public class Poll<T> {
         this.votes = new HashMap<String, Integer>();
     }
 
+    public void cancel() {
+        this.handler.cancelled();
+    }
+
     public List<PollItem<T>> getChoices() {
         return new ArrayList<PollItem<T>>(this.choices);
     }
@@ -89,9 +93,5 @@ public class Poll<T> {
 
     public VoteEntered vote(String name, int id) {
         return this.votes.put(name, id) == null ? VoteEntered.NEW : VoteEntered.CHANGED;
-    }
-
-    public void cancel() {
-        this.handler.cancelled();
     }
 }

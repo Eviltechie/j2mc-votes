@@ -12,14 +12,23 @@ public class J2MC_Votes extends JavaPlugin {
     private static J2MC_Votes instance;
     private static Thread mainThread;
 
+    public static boolean isPolling() {
+        J2MC_Votes.testIncoming();
+        return J2MC_Votes.instance.hasPoll();
+    }
+
     public static void startNewPoll(Poll<?> poll) throws VoteInProgressNotCancellableException {
+        J2MC_Votes.testIncoming();
+        J2MC_Votes.instance.newPoll(poll);
+    }
+
+    private static void testIncoming() {
         if (J2MC_Votes.instance == null) {
             throw new RuntimeException("J2MC_Votes not enabled, somehow");
         }
         if (!Thread.currentThread().equals(J2MC_Votes.mainThread)) {
             throw new RuntimeException("Dipshit called votes from another thread.");
         }
-        J2MC_Votes.instance.newPoll(poll);
     }
 
     private Poll<?> poll;
