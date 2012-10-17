@@ -91,7 +91,7 @@ public class Poll<T> {
         return this.votes.put(name, id) == null ? VoteEntered.NEW : VoteEntered.CHANGED;
     }
 
-    void cancel() {
+    public void cancel() {
         this.handler.cancelled();
     }
 }
