@@ -61,7 +61,7 @@ public class VoteCommand extends MasterCommand {
                 sender.sendMessage(ChatColor.RED + "Can't have only one option");
                 return;
             }
-            final Poll<String> poll = new Poll<String>(question, PollItem.fromList(combinedArgs), new DefaultHandler(), 20, true, true);
+            final Poll<String> poll = new Poll<String>(question, PollItem.fromCollection(combinedArgs), new DefaultHandler(), 20, true, true);
             try {
                 this.plugin.newPoll(poll);
                 return;

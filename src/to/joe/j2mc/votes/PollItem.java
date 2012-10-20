@@ -1,12 +1,13 @@
 package to.joe.j2mc.votes;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class PollItem<T> {
-    public static List<PollItem<String>> fromList(List<String> list) {
+    public static List<PollItem<String>> fromCollection(Collection<String> collection) {
         final List<PollItem<String>> ret = new ArrayList<PollItem<String>>();
-        for (final String s : list) {
+        for (final String s : collection) {
             ret.add(new PollItem<String>(s, s));
         }
         return ret;

@@ -6,8 +6,7 @@ import java.util.List;
 
 public class Poll<T> {
     public enum VoteEntered {
-        NEW,
-        CHANGED
+        NEW, CHANGED
     }
 
     //The question that is currently being asked. Null if no vote is in progress
